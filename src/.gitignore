@@ -1,0 +1,4 @@
+credentials.sh
+*.pyc
+outputs
+outputs/*
