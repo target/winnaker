@@ -43,7 +43,7 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     if not args.nologin:
         s.login()
     s.get_pipeline(args.app, args.pipeline)
-    if not args.nolastbuildstatus:
+    if not args.nolastbuild:
         print("- Last build status " + s.get_last_build().status.encode('utf-8'))
         print("- Screenshot Stages")
         s.get_stages()
