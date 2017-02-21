@@ -78,13 +78,18 @@ class Spinnaker():
         self.check_page_contains_error()
         self.get_pipelines(appname)
         time.sleep(0.5)
-        searchbox = "//div[@class='form-group nav-search']//input[@type='search']"
-        e = wait_for_xpath_presence(self.driver, searchbox)
-        e.send_keys(pipelinename)
+        checkbox = "//div[@class='nav']//execution-filters//label[contains(.,'  %s')]/input[@type='checkbox']" % pipelinename
+        e = wait_for_xpath_presence(
+            self.driver, checkbox, be_clickable=True)
+        move_to_element(self.driver, e, click=True)
+        time.sleep(2)
+        if not e.get_attribute('checked'):
+            e = wait_for_xpath_presence(
+                self.driver, checkbox, be_clickable=True)
+            e.click()
+        time.sleep(2)
         self.driver.save_screenshot("./outputs/pipelines.png")
-        time.sleep(1)
-        e.send_keys(Keys.RETURN)
-        print("- Searched for pipleline " + pipelinename + " successfully ✓")
+        print("- Selected pipleline " + pipelinename + " successfully ✓")
 
     def start_manual_execution(self, force_bake=False):
         self.check_page_contains_error()
@@ -197,7 +202,8 @@ class Build():
 
     def __init__(self, trigger_details, execution_summary):
         try:
-            self.status = execution_summary.split("\n")[0].replace("Status: ", "")
+            self.status = execution_summary.split(
+                "\n")[0].replace("Status: ", "")
             self.duration = execution_summary.split(
                 "\n")[1].replace("Duration: ", "")
             self.type_of_start = ""
@@ -211,7 +217,7 @@ class Build():
                 self.datetime_started = trigger_details.split("\n")[1]
             self.detail = trigger_details.split("\n")[2]
             self.stack = trigger_details.split("\n")[3]
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             pass
 
     def status_is_valid(self):

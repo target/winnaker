@@ -4,8 +4,6 @@ from models import *
 from selenium import webdriver
 
 
-
-
 if __name__ == "__main__":
 
     print ("""
@@ -29,9 +27,10 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
                         help="the name of pipline to test", default=os.environ["WINNAKER_PIPELINE_NAME"])
     parser.add_argument("-nl", "--nologin",
                         help="will not attempt to login", action="store_true")
+    parser.add_argument("-nlb", "--nolastbuild",
+                        help="will not attempt to check last build status or stages", action="store_true")
     parser.add_argument(
         "-hl", "--headless",  help="will run in an xfvb display ", action="store_true")
-
 
     args = parser.parse_args()
 
@@ -44,9 +43,10 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     if not args.nologin:
         s.login()
     s.get_pipeline(args.app, args.pipeline)
-    print ("- Last build status "+s.get_last_build().status.encode('utf-8'))
-    print ("- Screenshot Stages")
-    s.get_stages()
+    if not args.nolastbuildstatus:
+        print("- Last build status " + s.get_last_build().status.encode('utf-8'))
+        print("- Screenshot Stages")
+        s.get_stages()
 
     if args.start:
         s.start_manual_execution(force_bake=args.forcebake)
