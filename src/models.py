@@ -132,8 +132,11 @@ class Spinnaker():
             status = self.get_last_build().status
             if "RUNNING" in status:
                 time.sleep(10)
+            elif "NOT_STARTED" in status:
+                print("Pipeline has not yet started.")
+                time.sleep(10)
             elif "SUCCEEDED" in status:
-                print("\nCongratulations pipleline run was successfull")
+                print("\nCongratulations pipleline run was successful.")
                 print_passed()
                 self.get_stages(n=2)
                 return 0
