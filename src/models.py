@@ -78,13 +78,18 @@ class Spinnaker():
         self.check_page_contains_error()
         self.get_pipelines(appname)
         time.sleep(0.5)
-        searchbox = "//div[@class='form-group nav-search']//input[@type='search']"
-        e = wait_for_xpath_presence(self.driver, searchbox)
-        e.send_keys(pipelinename)
+        checkbox = "//div[@class='nav']//execution-filters//label[contains(.,'  %s')]/input[@type='checkbox']" % pipelinename
+        e = wait_for_xpath_presence(
+            self.driver, checkbox, be_clickable=True)
+        move_to_element(self.driver, e, click=True)
+        time.sleep(2)
+        if not e.get_attribute('checked'):
+            e = wait_for_xpath_presence(
+                self.driver, checkbox, be_clickable=True)
+            e.click()
+        time.sleep(2)
         self.driver.save_screenshot("./outputs/pipelines.png")
-        time.sleep(1)
-        e.send_keys(Keys.RETURN)
-        print("- Searched for pipleline " + pipelinename + " successfully ✓")
+        print("- Selected pipleline " + pipelinename + " successfully ✓")
 
     def start_manual_execution(self, force_bake=False):
         self.check_page_contains_error()
@@ -127,8 +132,11 @@ class Spinnaker():
             status = self.get_last_build().status
             if "RUNNING" in status:
                 time.sleep(10)
+            elif "NOT_STARTED" in status:
+                print("Pipeline has not yet started.")
+                time.sleep(10)
             elif "SUCCEEDED" in status:
-                print("\nCongratulations pipleline run was successfull")
+                print("\nCongratulations pipleline run was successful.")
                 print_passed()
                 self.get_stages(n=2)
                 return 0
@@ -197,7 +205,8 @@ class Build():
 
     def __init__(self, trigger_details, execution_summary):
         try:
-            self.status = execution_summary.split("\n")[0].replace("Status: ", "")
+            self.status = execution_summary.split(
+                "\n")[0].replace("Status: ", "")
             self.duration = execution_summary.split(
                 "\n")[1].replace("Duration: ", "")
             self.type_of_start = ""
@@ -211,7 +220,7 @@ class Build():
                 self.datetime_started = trigger_details.split("\n")[1]
             self.detail = trigger_details.split("\n")[2]
             self.stack = trigger_details.split("\n")[3]
-        except (ValueError,IndexError):
+        except (ValueError, IndexError):
             pass
 
     def status_is_valid(self):
