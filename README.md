@@ -94,3 +94,8 @@ use with --caution--, will override the sample app.
 - grab the post url
 it should look like
 `https://INSERT_HIPCHAT_BASE_URL.com/v2/room/INSERT_ROOM_ID/notification?auth_token=INSERT_TOKEN`
+
+
+#### How to import the Winnaker python package?
+- `pip install git+git://github.com/target/winnaker`
+- Then in your python script you can import the Winnaker modules. For example you can import the `models` module via `from winnaker import models`

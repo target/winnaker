@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import argparse
-from models import *
+from winnaker.models import *
 from selenium import webdriver
 
 
-if __name__ == "__main__":
+def main():
 
     print ("""
 ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .______
-\   \  /  \  /   / |  | |  \ |  | |  \ |  |     /   \     |  |/  / |   ____||   _  \
+\   \  /  \  /   / |  | |  \ |  | |  \ |  |     /   \     |  |/  / |   ____||   _  \\
  \   \/    \/   /  |  | |   \|  | |   \|  |    /  ^  \    |  '  /  |  |__   |  |_)  |
   \            /   |  | |  . `  | |  . `  |   /  /_\  \   |    <   |   __|  |      /
    \    /\    /    |  | |  |\   | |  |\   |  /  _____  \  |  .  \  |  |____ |  |\  \----.
@@ -53,3 +53,6 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
 
     if args.headless:
         display.stop()
+
+if __name__ == "__main__":
+    main()

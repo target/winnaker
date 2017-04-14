@@ -12,6 +12,10 @@ Here are the easy steps to contribute to the Winnaker.
 
     `python models_test.py`
 
+Note: If you are having trouble running the test file, make sure your `PYTHONPATH` includes the root of the repo. For example, from the root:
+
+    `PYTHONPATH=$(pwd) python winnaker/models_test.py`
+
 3. Write a good commit message, Push to your fork and [submit a pull request](https://github.com/target/winnaker/compare/)
 
 PRs will be reviewed in a couple days.

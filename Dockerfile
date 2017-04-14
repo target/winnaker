@@ -11,10 +11,8 @@ RUN curl -SLO "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION
   && unzip "chromedriver_linux64.zip" -d /usr/local/bin \
   && rm "chromedriver_linux64.zip"
 
-ADD ./src/requirements.txt /tmp/requirements.txt
+COPY ./ /src/
 
-RUN pip install -r /tmp/requirements.txt
+RUN pip install /src/
 
-WORKDIR /app
-
-ENTRYPOINT ["python", "main.py", "-hl"]
+ENTRYPOINT ["winnaker", "-hl"]
