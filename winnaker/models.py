@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import os
-from helpers import *
+from winnaker.helpers import *
 from datetime import datetime
 import sys
 from tqdm import tqdm
