@@ -47,7 +47,7 @@ class Spinnaker():
         e.send_keys(os.environ['WINNAKER_PASSWORD'])
         e = wait_for_xpath_presence(self.driver, signinbutton)
         e.click()
-        print("- Logged in to the spinnaker ✓")
+        print("- Logged in to the spinnaker")
 
     def get_application(self, appname):
         self.check_page_contains_error()
@@ -65,7 +65,7 @@ class Spinnaker():
         e = wait_for_xpath_presence(self.driver, app_xpath)
         e.click()
         time.sleep(1)
-        print("- Searched for application " + appname + " ✓")
+        print("- Searched for application " + appname)
 
     def get_pipelines(self, appname):
         self.get_application(appname)
@@ -89,7 +89,7 @@ class Spinnaker():
             e.click()
         time.sleep(2)
         self.driver.save_screenshot("./outputs/pipelines.png")
-        print("- Selected pipeline " + pipelinename + " successfully ✓")
+        print("- Selected pipeline " + pipelinename + " successfully")
 
     def start_manual_execution(self, force_bake=False):
         self.check_page_contains_error()
