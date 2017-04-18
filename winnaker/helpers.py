@@ -53,7 +53,7 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False, TRY_UP_TO=10):
             move_to_element(driver, e)
             return e
         except TimeoutException:
-            print("Error: Could not find" + xpath)
+            print("Error: Could not find " + xpath)
             driver.save_screenshot("./outputs/debug" + now() + ".png")
             a_nice_refresh(driver)
         except StaleElementReferenceException:
@@ -104,16 +104,16 @@ def click_stubborn(driver, e, xpath):
 
 def print_passed():
     print("""
-    ╔═╗╔═╗╔═╗╔═╗╔═╗╔╦╗
-    ╠═╝╠═╣╚═╗╚═╗║╣  ║║
-    ╩  ╩ ╩╚═╝╚═╝╚═╝═╩╝
+    ******************
+        PASSED
+    ******************
     """)
 
 def print_failed():
     print ("""
-    ╔═╗╔═╗╦╦  ╔═╗╔╦╗
-    ╠╣ ╠═╣║║  ║╣  ║║
-    ╚  ╩ ╩╩╩═╝╚═╝═╩╝
+    !!!!!!!!!!!!!!!!!!
+        FAILED
+    !!!!!!!!!!!!!!!!!!
     """)
 
 def now():

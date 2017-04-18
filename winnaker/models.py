@@ -47,7 +47,7 @@ class Spinnaker():
         e.send_keys(os.environ['WINNAKER_PASSWORD'])
         e = wait_for_xpath_presence(self.driver, signinbutton)
         e.click()
-        print("- Logged in to the spinnaker ✓")
+        print("- Logged in to the spinnaker")
 
     def get_application(self, appname):
         self.check_page_contains_error()
@@ -65,7 +65,7 @@ class Spinnaker():
         e = wait_for_xpath_presence(self.driver, app_xpath)
         e.click()
         time.sleep(1)
-        print("- Searched for application " + appname + " ✓")
+        print("- Searched for application " + appname)
 
     def get_pipelines(self, appname):
         self.get_application(appname)
@@ -89,12 +89,12 @@ class Spinnaker():
             e.click()
         time.sleep(2)
         self.driver.save_screenshot("./outputs/pipelines.png")
-        print("- Selected pipleline " + pipelinename + " successfully ✓")
+        print("- Selected pipeline " + pipelinename + " successfully")
 
     def start_manual_execution(self, force_bake=False):
         self.check_page_contains_error()
         # starts the 1st pipeline which is currently on the page
-        start_xpath = "//executions/div/div[2]/execution-groups/div/div/div/execution-group/div/div[1]/div/div/div[2]/h4[2]/a/span"
+        start_xpath = "//div[contains(@class, 'execution-group-actions')]/h4[2]/a/span"
         e = wait_for_xpath_presence(self.driver, start_xpath)
         click_stubborn(self.driver, e, start_xpath)
         time.sleep(3)
@@ -166,7 +166,7 @@ class Spinnaker():
     def get_stages(self, n=2):
         # n number of stages to get
         for i in range(1, n + 1):
-            stage_xpath = "//execution[1]/div[1]/div[1]/div[@class='stages']/div[" + str(
+            stage_xpath = "//execution[1]//div[@class='stages']/div[" + str(
                 i) + "]"
             e = wait_for_xpath_presence(
                 self.driver, stage_xpath, be_clickable=True)
