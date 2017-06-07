@@ -34,16 +34,18 @@ class Spinnaker():
         time.sleep(1)
         self.driver.get(os.environ["WINNAKER_SPINNAKER_URL"])
         self.wait = WebDriverWait(self.driver, 10)
+        if not os.path.exists(os.environ["WINNAKER_OUTPUTPATH"]):
+            os.makedirs(os.environ["WINNAKER_OUTPUTPATH"])
 
     def login(self):
         self.check_page_contains_error()
         usernamebox = "//input[@id='username'][@name='pf.username']"
         passwordbox = "//input[@id='password'][@name='pf.pass']"
-        signinbutton = "//a[@title='Sign In']"
+        signinbutton = "//input[@type='submit']"
         e = wait_for_xpath_presence(self.driver, usernamebox)
         e.send_keys(os.environ['WINNAKER_USERNAME'])
         e = wait_for_xpath_presence(self.driver, passwordbox)
-        self.driver.save_screenshot("./outputs/login.png")
+        self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/login.png")
         e.send_keys(os.environ['WINNAKER_PASSWORD'])
         e = wait_for_xpath_presence(self.driver, signinbutton)
         e.click()
@@ -60,7 +62,7 @@ class Spinnaker():
         e.send_keys(appname)
         e.send_keys(Keys.RETURN)
         time.sleep(1)
-        self.driver.save_screenshot("./outputs/applications.png")
+        self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/applications.png")
         app_xpath = "//a[contains (.,'" + appname + "')]"
         e = wait_for_xpath_presence(self.driver, app_xpath)
         e.click()
@@ -88,7 +90,7 @@ class Spinnaker():
                 self.driver, checkbox, be_clickable=True)
             e.click()
         time.sleep(2)
-        self.driver.save_screenshot("./outputs/pipelines.png")
+        self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/pipelines.png")
         print("- Selected pipeline " + pipelinename + " successfully")
 
     def start_manual_execution(self, force_bake=False):
@@ -110,7 +112,7 @@ class Spinnaker():
                     self.driver, xpath, be_clickable=True)
                 print("Checking force bake option")
                 e.click()
-            self.driver.save_screenshot("./outputs/force_bake_check.png")
+            self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/force_bake_check.png")
 
         run_xpath = "//button[@type='submit' and contains(.,'Run')]/span[1]"
         e = wait_for_xpath_presence(self.driver, run_xpath, be_clickable=True)
@@ -160,7 +162,7 @@ class Spinnaker():
         time.sleep(1)
         detail_xpath = "//execution[1]//execution-status//div/a[contains(., 'Details')]"
         e = wait_for_xpath_presence(self.driver, detail_xpath)
-        self.driver.save_screenshot("./outputs/last_build_status.png")
+        self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/last_build_status.png")
         return self.build
 
     def get_stages(self, n=2):
@@ -187,7 +189,7 @@ class Spinnaker():
                             sys.exit(1)
                 except TimeoutException:
                     continue
-            self.driver.save_screenshot("./outputs/stage_" + str(i) + ".png")
+            self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/stage_" + str(i) + ".png")
 
     def check_page_contains_error(self):
         for error in ERROR_LIST.keys():
