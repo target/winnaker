@@ -21,10 +21,33 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 ## Run Headless in in docker.
 1. Build Docker:
 
-	`docker build -t winnaker .`
+	```
+	docker build -t winnaker
+	```
 
-2. Config :
-   copy the sample env file and edit it.
+
+2. Config : copy the sample env file and edit it.
+
+	```
+	cp .env-sample .env
+
+	```
+3.
+
+	```
+	docker run --env-file .env -it -v $(pwd)/winnaker-screenshots:/winnaker-screenshots/ winnaker
+	```
+
+4. Add [options](#options) as needed.
+
+
+## Run GUI mode .
+
+1. run
+```
+./run.sh
+```
+1. Add [options](#options) as needed.
 
 
 
@@ -41,6 +64,11 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 	- `./src/outputs/stage1.png`
 - Any error will result in a non-zero code to the system.
 - Error screenshots will be timestaped.
+
+
+## Screenshots
+
+- screenshot folder by default is winnaker-screenshots
 
 
 ## Options
