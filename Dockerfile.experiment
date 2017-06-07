@@ -1,9 +1,6 @@
-FROM debian:jessie-slim
+FROM rickypc/docker-python-firefox-xvfb
 
-RUN apt-get update && apt-get install -y \
-    xvfb chromium \
-    python python-pip curl unzip vim libgconf-2-4 --fix-missing
-
+RUN apk add --no-cache py-pip curl
 
 ENV CHROMEDRIVER_VERSION 2.29
 
@@ -14,5 +11,7 @@ RUN curl -SLO "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION
 COPY ./ /winnaker/
 
 RUN pip install /winnaker/
+
+RUN mkdir -p /winnaker-screenshots
 
 ENTRYPOINT ["winnaker", "-hl"]

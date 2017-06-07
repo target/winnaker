@@ -5,11 +5,13 @@ from setuptools import setup, find_packages
 setup(name='winnaker',
       description='An audit tool that tests the whole system functionality of Spinnaker',
       author='Target Corporation',
+      version='0.1.9',
+      license='MIT',
       packages=find_packages(),
       install_requires=[
-          'selenium',
-          'pyvirtualdisplay',
-          'tqdm',
+          'selenium==3.4.3',
+          'pyvirtualdisplay==0.2',
+          'tqdm==4.8.4',
       ],
       entry_points={
           "console_scripts": [

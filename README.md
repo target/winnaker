@@ -18,18 +18,38 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 2. a sample app
 3. a sample pipeline
 
-## Painless Headless Run
+## Run Headless in in docker.
 1. Build Docker:
 
-	`docker build -t winnaker .`
+	```
+	docker build -t winnaker
+	```
 
-2. Config :
 
-	edit and replace default values in `./src/config.sh`
+2. Config : copy the sample env file and edit it.
 
-3. Run:
+	```
+	cp .env-sample .env
 
-	`./run.sh`
+	```
+3.
+
+	```
+	docker run --env-file .env -it -v $(pwd)/winnaker-screenshots:/winnaker-screenshots/ winnaker
+	```
+
+4. Add [options](#options) as needed.
+
+
+## Run GUI mode .
+
+1. run
+```
+./run.sh
+```
+1. Add [options](#options) as needed.
+
+
 
 ## What does default run do ?
 - Logs in to `spinnaker` through chromium browser
@@ -44,6 +64,11 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 	- `./src/outputs/stage1.png`
 - Any error will result in a non-zero code to the system.
 - Error screenshots will be timestaped.
+
+
+## Screenshots
+
+- screenshot folder by default is winnaker-screenshots
 
 
 ## Options

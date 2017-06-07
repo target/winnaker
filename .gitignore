@@ -1,0 +1,6 @@
+credentials.sh
+.env
+*.pyc
+winnaker-screenshots
+outputs
+winnaker.egg-info/
