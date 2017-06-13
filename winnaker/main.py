@@ -2,6 +2,7 @@
 import argparse
 from winnaker.models import *
 from selenium import webdriver
+import pkg_resources  # part of setuptools
 
 def main():
     print ("""
@@ -14,7 +15,9 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
 
     """)
     import os
-    print (os.environ.get("WINNAKER_APP_NAME"))
+    version = pkg_resources.require("winnaker")[0].version
+    print ("Winnaker Version: "+version)
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--start", help="starts manual execution of the pipline",
                         action="store_true")
