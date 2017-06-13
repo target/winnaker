@@ -39,9 +39,10 @@ class Spinnaker():
 
     def login(self):
         self.check_page_contains_error()
-        usernamebox = "//input[@id='username'][@name='pf.username']"
-        passwordbox = "//input[@id='password'][@name='pf.pass']"
-        signinbutton = "//input[@type='submit']"
+        usernamebox = os.environ["WINNAKER_XPATH_LOGIN_USERNAME"]
+        passwordbox = os.environ["WINNAKER_XPATH_LOGIN_PASSWORD"]
+        signinbutton = os.environ["WINNAKER_XPATH_LOGIN_SUBMIT"]
+
         e = wait_for_xpath_presence(self.driver, usernamebox)
         e.send_keys(os.environ['WINNAKER_USERNAME'])
         e = wait_for_xpath_presence(self.driver, passwordbox)
@@ -53,11 +54,11 @@ class Spinnaker():
 
     def get_application(self, appname):
         self.check_page_contains_error()
-        applications_xpath = "//a[@href='#/applications' and contains(.,'Applications')]"
+        applications_xpath = os.environ["WINNAKER_XPATH_APPLICATIONS_TAB"]
         e = wait_for_xpath_presence(
             self.driver, applications_xpath, be_clickable=True)
         e.click()
-        searchbox = "//input[@placeholder='Search applications']"
+        searchbox = os.environ["WINNAKER_XPATH_SEARCH_APPLICATIONS"]
         e = wait_for_xpath_presence(self.driver, searchbox)
         e.send_keys(appname)
         e.send_keys(Keys.RETURN)
@@ -96,18 +97,18 @@ class Spinnaker():
     def start_manual_execution(self, force_bake=False):
         self.check_page_contains_error()
         # starts the 1st pipeline which is currently on the page
-        start_xpath = "//div[contains(@class, 'execution-group-actions')]/h4[2]/a/span"
+        start_xpath = os.environ["WINNAKER_XPATH_START_MANUAL_EXECUTION"]
         e = wait_for_xpath_presence(self.driver, start_xpath)
         click_stubborn(self.driver, e, start_xpath)
         time.sleep(3)
         if force_bake:
-            fbake_xpath = "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']"
+            fbake_xpath = os.environ["WINNAKER_XPATH_FORCE_REBAKE"]
             e = wait_for_xpath_presence(
                 self.driver, start_xpath, be_clickable=True)
             move_to_element(self.driver, e, click=True)
             time.sleep(2)
             if not e.get_attribute('checked'):
-                xpath = "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']"
+                xpath = os.environ["WINNAKER_XPATH_FORCE_REBAKE"]
                 e = wait_for_xpath_presence(
                     self.driver, xpath, be_clickable=True)
                 print("Checking force bake option")
@@ -151,21 +152,22 @@ class Spinnaker():
                 sys.exit(2)
 
     def get_last_build(self):
-        execution_summary_xp = "//execution[1]//div[@class='execution-summary']"
+        execution_summary_xp = os.environ["WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY"]
         execution_summary = wait_for_xpath_presence(
             self.driver, execution_summary_xp)
 
-        trigger_details_xp = "//execution[1]//ul[@class='trigger-details']"
+        trigger_details_xp = os.environ["WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS"]
         trigger_details = wait_for_xpath_presence(
             self.driver, trigger_details_xp)
         self.build = Build(trigger_details.text, execution_summary.text)
         time.sleep(1)
-        detail_xpath = "//execution[1]//execution-status//div/a[contains(., 'Details')]"
+        detail_xpath = os.environ["WINNAKER_XPATH_PIPLELINE_DETAILS_LINK"]
         e = wait_for_xpath_presence(self.driver, detail_xpath)
         self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/last_build_status.png")
         return self.build
 
-    def get_stages(self, n=2):
+    # TODO Get all the stages automaticly
+    def get_stages(self, n=int(os.environ["WINNAKER_NUMBER_OF_STAGES_TO_CHECK"])):
         # n number of stages to get
         for i in range(1, n + 1):
             stage_xpath = "//execution[1]//div[@class='stages']/div[" + str(
