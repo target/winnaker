@@ -23,7 +23,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 
 
 	```
-	docker build -t winnaker
+	docker build -t winnaker .
 	```
 
 
