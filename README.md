@@ -38,7 +38,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 
 3. Run :
 	```
-		docker run --env-file .env -it -v $(pwd)/winnaker-screenshots:/winnaker-screenshots/ winnaker
+	docker run --env-file .env -it -v $(pwd)/winnaker-screenshots:/winnaker-screenshots/ winnaker
 	```
 
 4. Add [options](#options) as needed.

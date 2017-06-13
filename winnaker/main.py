@@ -16,7 +16,7 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     """)
     import os
     version = pkg_resources.require("winnaker")[0].version
-    print ("Winnaker Versoin: "+version)
+    print ("Winnaker Version: "+version)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--start", help="starts manual execution of the pipline",
