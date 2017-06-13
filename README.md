@@ -13,7 +13,11 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
 ## What is Winnaker ?
 Auditing tool for Spinnaker. Real Testing in real browser !
 
-## What do you need?
+## What do you need on your work station?
+1. python 2.7
+2. a copy of [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/home) in your PATH
+
+## What do you need in your system under test?
 1. a spinnaker url
 2. a sample app
 3. a sample pipeline
