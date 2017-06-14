@@ -58,7 +58,7 @@ class Spinnaker():
         e = wait_for_xpath_presence(
             self.driver, applications_xpath, be_clickable=True)
         e.click()
-        searchbox = get_env("WINNAKER_XPATH_SEARCH_APPLICATIONS"], "//input[@placeholder='Search applications']")
+        searchbox = get_env("WINNAKER_XPATH_SEARCH_APPLICATIONS", "//input[@placeholder='Search applications']")
         e = wait_for_xpath_presence(self.driver, searchbox)
         e.send_keys(appname)
         e.send_keys(Keys.RETURN)
@@ -156,7 +156,7 @@ class Spinnaker():
         execution_summary = wait_for_xpath_presence(
             self.driver, execution_summary_xp)
 
-        trigger_details_xp = get_env("WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS"], "//execution[1]//ul[@class='trigger-details']")
+        trigger_details_xp = get_env("WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS", "//execution[1]//ul[@class='trigger-details']")
         trigger_details = wait_for_xpath_presence(
             self.driver, trigger_details_xp)
         self.build = Build(trigger_details.text, execution_summary.text)
