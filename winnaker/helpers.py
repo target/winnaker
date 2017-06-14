@@ -11,6 +11,13 @@ from datetime import datetime
 # from selenium.common.exceptions import ElementNotVisibleException
 
 
+def get_env(env_key, default):
+    import os
+    value = os.getenv(env_key)
+    if value is None or len(value) == 0:
+        return default
+    return value
+
 def post_to_hipchat(message, alert=False):
     import requests
     import os

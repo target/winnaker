@@ -39,9 +39,9 @@ class Spinnaker():
 
     def login(self):
         self.check_page_contains_error()
-        usernamebox = os.environ["WINNAKER_XPATH_LOGIN_USERNAME"]
-        passwordbox = os.environ["WINNAKER_XPATH_LOGIN_PASSWORD"]
-        signinbutton = os.environ["WINNAKER_XPATH_LOGIN_SUBMIT"]
+        usernamebox = get_env("WINNAKER_XPATH_LOGIN_USERNAME", "//input[@id='username'][@name='pf.username']")
+        passwordbox = get_env("WINNAKER_XPATH_LOGIN_PASSWORD", "//input[@id='password'][@name='pf.pass']")
+        signinbutton = get_env("WINNAKER_XPATH_LOGIN_SUBMIT", "//input[@type='submit']")
 
         e = wait_for_xpath_presence(self.driver, usernamebox)
         e.send_keys(os.environ['WINNAKER_USERNAME'])
@@ -54,11 +54,11 @@ class Spinnaker():
 
     def get_application(self, appname):
         self.check_page_contains_error()
-        applications_xpath = os.environ["WINNAKER_XPATH_APPLICATIONS_TAB"]
+        applications_xpath = get_env("WINNAKER_XPATH_APPLICATIONS_TAB", "//a[@href='#/applications' and contains(.,'Applications')]")
         e = wait_for_xpath_presence(
             self.driver, applications_xpath, be_clickable=True)
         e.click()
-        searchbox = os.environ["WINNAKER_XPATH_SEARCH_APPLICATIONS"]
+        searchbox = get_env("WINNAKER_XPATH_SEARCH_APPLICATIONS", "//input[@placeholder='Search applications']")
         e = wait_for_xpath_presence(self.driver, searchbox)
         e.send_keys(appname)
         e.send_keys(Keys.RETURN)
@@ -97,18 +97,18 @@ class Spinnaker():
     def start_manual_execution(self, force_bake=False):
         self.check_page_contains_error()
         # starts the 1st pipeline which is currently on the page
-        start_xpath = os.environ["WINNAKER_XPATH_START_MANUAL_EXECUTION"]
+        start_xpath = get_env("WINNAKER_XPATH_START_MANUAL_EXECUTION", "//div[contains(@class, 'execution-group-actions')]/h4[2]/a/span")
         e = wait_for_xpath_presence(self.driver, start_xpath)
         click_stubborn(self.driver, e, start_xpath)
         time.sleep(3)
         if force_bake:
-            fbake_xpath = os.environ["WINNAKER_XPATH_FORCE_REBAKE"]
+            fbake_xpath = get_env("WINNAKER_XPATH_FORCE_REBAKE", "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']")
             e = wait_for_xpath_presence(
                 self.driver, start_xpath, be_clickable=True)
             move_to_element(self.driver, e, click=True)
             time.sleep(2)
             if not e.get_attribute('checked'):
-                xpath = os.environ["WINNAKER_XPATH_FORCE_REBAKE"]
+                xpath = get_env("WINNAKER_XPATH_FORCE_REBAKE", "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']")
                 e = wait_for_xpath_presence(
                     self.driver, xpath, be_clickable=True)
                 print("Checking force bake option")
@@ -152,16 +152,16 @@ class Spinnaker():
                 sys.exit(2)
 
     def get_last_build(self):
-        execution_summary_xp = os.environ["WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY"]
+        execution_summary_xp = get_env("WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY", "//execution[1]//div[@class='execution-summary']")
         execution_summary = wait_for_xpath_presence(
             self.driver, execution_summary_xp)
 
-        trigger_details_xp = os.environ["WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS"]
+        trigger_details_xp = get_env("WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS", "//execution[1]//ul[@class='trigger-details']")
         trigger_details = wait_for_xpath_presence(
             self.driver, trigger_details_xp)
         self.build = Build(trigger_details.text, execution_summary.text)
         time.sleep(1)
-        detail_xpath = os.environ["WINNAKER_XPATH_PIPLELINE_DETAILS_LINK"]
+        detail_xpath = get_env("WINNAKER_XPATH_PIPLELINE_DETAILS_LINK", "//execution[1]//execution-status//div/a[contains(., 'Details')]")
         e = wait_for_xpath_presence(self.driver, detail_xpath)
         self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/last_build_status.png")
         return self.build
