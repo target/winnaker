@@ -152,16 +152,16 @@ class Spinnaker():
                 sys.exit(2)
 
     def get_last_build(self):
-        execution_summary_xp = get_env("WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY", "//execution[1]//div[@class='execution-summary']")
+        execution_summary_xp = get_env("WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY", "//execution-groups[1]//div[@class='execution-summary']")
         execution_summary = wait_for_xpath_presence(
             self.driver, execution_summary_xp)
 
-        trigger_details_xp = get_env("WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS", "//execution[1]//ul[@class='trigger-details']")
+        trigger_details_xp = get_env("WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS", "//execution-groups[1]//ul[@class='trigger-details']")
         trigger_details = wait_for_xpath_presence(
             self.driver, trigger_details_xp)
         self.build = Build(trigger_details.text, execution_summary.text)
         time.sleep(1)
-        detail_xpath = get_env("WINNAKER_XPATH_PIPLELINE_DETAILS_LINK", "//execution[1]//execution-status//div/a[contains(., 'Details')]")
+        detail_xpath = get_env("WINNAKER_XPATH_PIPLELINE_DETAILS_LINK", "//execution-groups[1]//execution-status//div/a[contains(., 'Details')]")
         e = wait_for_xpath_presence(self.driver, detail_xpath)
         self.driver.save_screenshot(os.environ["WINNAKER_OUTPUTPATH"]+"/last_build_status.png")
         return self.build

@@ -95,7 +95,7 @@ optional arguments:
 
 
 ## Examples :
-##### Example 1: Gets the last build status of the default pipleine
+##### Example 1: Gets the last build status of the default pipeline
 `./run.sh`
 
 
