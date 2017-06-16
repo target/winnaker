@@ -7,6 +7,9 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import WebDriverException
 import time
 from datetime import datetime
+from retrying import retry
+
+
 
 # from selenium.common.exceptions import ElementNotVisibleException
 
@@ -42,30 +45,31 @@ def post_to_hipchat(message, alert=False):
 
 
 def a_nice_refresh(driver):
-    time.sleep(1)
     driver.refresh()
     print("Refreshing the browser ...")
     time.sleep(1)
 
 
-def wait_for_xpath_presence(driver, xpath, be_clickable=False, TRY_UP_TO=10):
+@retry(wait_exponential_multiplier=1000, wait_exponential_max=5000,stop_max_attempt_number=10)
+def wait_for_xpath_presence(driver, xpath, be_clickable=False):
     wait = WebDriverWait(driver, 10)
-    for try_count in range(TRY_UP_TO):
-        try:
-            if be_clickable:
-                e = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-            else:
-                e = wait.until(
-                    EC.presence_of_element_located((By.XPATH, xpath)))
-            move_to_element(driver, e)
-            return e
-        except TimeoutException:
-            print("Error: Could not find " + xpath)
-            driver.save_screenshot("./outputs/debug" + now() + ".png")
-            a_nice_refresh(driver)
-        except StaleElementReferenceException:
-            driver.save_screenshot("./outputs/debug" + now() + ".png")
-            a_nice_refresh(driver)
+    try:
+        if be_clickable:
+            e = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        else:
+            e = wait.until(
+                EC.presence_of_element_located((By.XPATH, xpath)))
+        move_to_element(driver, e)
+        return e
+    except TimeoutException:
+        print("Error: Could not find " + xpath)
+        driver.save_screenshot("./outputs/debug" + now() + ".png")
+        a_nice_refresh(driver)
+        raise TimeoutException
+    except StaleElementReferenceException:
+        driver.save_screenshot("./outputs/debug" + now() + ".png")
+        a_nice_refresh(driver)
+        raise StaleElementReferenceException
     driver.save_screenshot("./outputs/error_driver_" + now() + ".png")
 
 
@@ -78,15 +82,14 @@ def move_to_element(driver, e, click=False):
         actions.move_to_element(e).perform()
 
 
+@retry(wait_exponential_multiplier=1000, wait_exponential_max=5000,stop_max_attempt_number=10)
 def get_body_text(driver):
-    for i in range(5):
-        try:
-            e = wait_for_xpath_presence(driver, "//body")
-            break
-        except StaleElementReferenceException:
-            a_nice_refresh(driver)
-            e = wait_for_xpath_presence(driver, "//*")
-            break
+    try:
+        e = wait_for_xpath_presence(driver, "//body")
+    except StaleElementReferenceException:
+        a_nice_refresh(driver)
+        e = wait_for_xpath_presence(driver, "//*")
+        raise StaleElementReferenceException
     return e.get_attribute("outerHTML")
 
 
