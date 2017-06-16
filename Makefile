@@ -12,7 +12,6 @@ clean-output:
 
 run-docker:
 	docker run --env-file .env -it -v $(CURDIR)/winnaker-screenshots:/winnaker-screenshots/ winnaker
-	
 
 
 .PHONY: build
