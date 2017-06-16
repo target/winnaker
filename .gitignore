@@ -4,3 +4,5 @@ credentials.sh
 winnaker-screenshots
 outputs
 winnaker.egg-info/
+.idea
+winnaker.iml
