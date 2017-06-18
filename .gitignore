@@ -6,3 +6,4 @@ outputs
 winnaker.egg-info/
 .idea
 winnaker.iml
+winnaker.log
