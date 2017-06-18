@@ -68,7 +68,6 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
         driver.save_screenshot("./outputs/debug" + now() + ".png")
         a_nice_refresh(driver)
         raise StaleElementReferenceException
-
     driver.save_screenshot("./outputs/error_driver_" + now() + ".png")
 
 
