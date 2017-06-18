@@ -27,9 +27,9 @@ export WINNAKER_XPATH_START_MANUAL_EXECUTION="//div[contains(@class, 'execution-
 # TODO Try this later
 # //label[contains(.,'Force')]
 export WINNAKER_XPATH_FORCE_REBAKE="//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']"
-export WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY="//execution-groups[1]//div[@class='execution-summary']]"
+export WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY="//execution-groups[1]//div[@class='execution-summary']"
 export WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS="//execution-groups[1]//ul[@class='trigger-details']"
-export WINNAKER_XPATH_PIPLELINE_DETAILS_LINK="//execution-groups[1]//execution-status//div/a[contains(., 'Details')]]"
+export WINNAKER_XPATH_PIPLELINE_DETAILS_LINK="//execution-groups[1]//execution-status//div/a[contains(., 'Details')]"
 
 
 

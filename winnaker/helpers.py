@@ -5,25 +5,22 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import WebDriverException
-import time
+import time, logging, os
 from datetime import datetime
 from retrying import retry
 
-
-
 # from selenium.common.exceptions import ElementNotVisibleException
 
-
 def get_env(env_key, default):
-    import os
     value = os.getenv(env_key)
     if value is None or len(value) == 0:
+        logging.debug("{} not set in environment, defaulting to {}".format(env_key, default))
         return default
+    logging.debug("{} set from environment".format(env_key))
     return value
 
 def post_to_hipchat(message, alert=False):
     import requests
-    import os
     import json
     if alert:
         color = "red"
@@ -46,12 +43,13 @@ def post_to_hipchat(message, alert=False):
 
 def a_nice_refresh(driver):
     driver.refresh()
-    print("Refreshing the browser ...")
+    logging.info("Refreshing the browser ...")
     time.sleep(1)
 
 
 @retry(wait_exponential_multiplier=1000, wait_exponential_max=5000,stop_max_attempt_number=10)
 def wait_for_xpath_presence(driver, xpath, be_clickable=False):
+    logging.debug("Waiting for XPATH: {}".format(xpath))
     wait = WebDriverWait(driver, 10)
     try:
         if be_clickable:
@@ -62,7 +60,7 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
         move_to_element(driver, e)
         return e
     except TimeoutException:
-        print("Error: Could not find " + xpath)
+        logging.error("Error: Could not find {}".format(xpath))
         driver.save_screenshot("./outputs/debug" + now() + ".png")
         a_nice_refresh(driver)
         raise TimeoutException
@@ -70,6 +68,7 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
         driver.save_screenshot("./outputs/debug" + now() + ".png")
         a_nice_refresh(driver)
         raise StaleElementReferenceException
+
     driver.save_screenshot("./outputs/error_driver_" + now() + ".png")
 
 
@@ -95,6 +94,7 @@ def get_body_text(driver):
 
 # Subbornly clicks on the elements which run away from the DOM
 def click_stubborn(driver, e, xpath):
+    logging.debug("Starting stubborn clicks")
     MAX_ATTEMPT = 6
     attempt = 0
     while attempt < MAX_ATTEMPT:
@@ -113,14 +113,14 @@ def click_stubborn(driver, e, xpath):
     return e
 
 def print_passed():
-    print("""
+    logging.info("""
     ******************
         PASSED
     ******************
     """)
 
 def print_failed():
-    print ("""
+    logging.error("""
     !!!!!!!!!!!!!!!!!!
         FAILED
     !!!!!!!!!!!!!!!!!!
