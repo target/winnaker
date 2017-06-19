@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import argparse, logging, os, sys
 from winnaker.models import *
+from winnaker.notify import *
 from selenium import webdriver
 import pkg_resources  # part of setuptools
-
+import atexit
+from datetime import datetime
 
 def main():
     print ("""
@@ -53,6 +55,11 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     version = pkg_resources.require("winnaker")[0].version
     logging.info("Winnaker Version: {}".format(version))
     logging.info("Current Config: {}".format(args))
+
+
+    if os.environ.get('WINNAKER_EMAIL_SMTP') is not None:
+        atexit.register(send_mail,os.environ["WINNAKER_EMAIL_FROM"],os.environ["WINNAKER_EMAIL_TO"],"Winnaker Screenshots "+str(datetime.utcnow()),"Here are the screenshots of the spinnaker's last run at "+str(datetime.utcnow())+" UTC Time",files=getScreenshotFiles(),server=os.environ["WINNAKER_EMAIL_SMTP"])
+
 
     if args.headless:
         logging.debug("Starting virtual display")

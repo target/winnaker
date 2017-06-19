@@ -7,8 +7,14 @@ build-docker-nocache:
 build-docker:
 	docker build -t winnaker .
 
+
 clean-output:
 	rm winnaker-screenshots/*.png || true
+
+clean:
+	rm *.pyc
+	rm winnaker/*.pyc
+
 
 run-docker:
 	docker run --env-file .env -it -v $(CURDIR)/winnaker-screenshots:/winnaker-screenshots/ winnaker
