@@ -8,8 +8,21 @@ from selenium.common.exceptions import WebDriverException
 import time, logging, os
 from datetime import datetime
 from retrying import retry
+from os import listdir
+from os.path import isfile, join
+from os.path import basename
 
 # from selenium.common.exceptions import ElementNotVisibleException
+
+def getScreenshotFiles():
+    return [
+        os.environ["WINNAKER_OUTPUTPATH"] +
+        "/" +
+        f for f in listdir(
+            os.environ["WINNAKER_OUTPUTPATH"]) if isfile(
+            join(
+                os.environ["WINNAKER_OUTPUTPATH"],
+                f))]
 
 def get_env(env_key, default):
     value = os.getenv(env_key)
