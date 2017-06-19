@@ -1,3 +1,6 @@
+developer-setup:
+	ln -s $(CURDIR)/hooks/pre-commit .git/hooks/pre-commit 
+
 install-locally:
 	pip install -e .
 
@@ -7,6 +10,8 @@ build-docker-nocache:
 build-docker:
 	docker build -t winnaker .
 
+format-code:
+	autopep8 --in-place --aggressive --aggressive winnaker/*
 
 clean-output:
 	rm winnaker-screenshots/*.png || true

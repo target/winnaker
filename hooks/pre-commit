@@ -1,0 +1,4 @@
+#!/bin/sh
+make format-code
+printf "\n---------- Formating with autopep8--------------\n\n"
+exit 0
