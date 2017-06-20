@@ -6,19 +6,22 @@ from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
 from helpers import getScreenshotFiles
 import logging
-
+from os.path import join
+from winnaker.settings import *
 
 def send_mail(send_from, send_to, subject, text,
               server="localhost"):
     logging.info("Sending email")
     files = getScreenshotFiles()
-    logging.info("Attaching files ", str(files))
     msg = MIMEMultipart()
     msg['From'] = send_from
     msg['To'] = send_to
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = subject
 
+    with file(join(cfg_output_files_path, "winnaker.log")) as f:
+        log_text = f.read()
+    text = text + "\n" + log_text
     msg.attach(MIMEText(text))
 
     for f in files or []:

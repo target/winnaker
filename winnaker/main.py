@@ -9,6 +9,7 @@ from selenium import webdriver
 import pkg_resources  # part of setuptools
 import atexit
 from datetime import datetime
+from winnaker.settings import *
 
 
 def main():
@@ -37,7 +38,7 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
         "--app",
         type=str,
         help="the name of application to look for",
-        default=os.environ.get("WINNAKER_APP_NAME"))
+        default=cfg_app_name)
     parser.add_argument(
         "-p",
         "--pipeline",
@@ -73,7 +74,8 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     rootLogger = logging.getLogger()
     rootLogger.setLevel(log_level)
 
-    fileHandler = logging.FileHandler("winnaker.log")
+    fileHandler = logging.FileHandler(
+        join(cfg_output_files_path, "winnaker.log"))
     fileHandler.setFormatter(logFormatter)
     rootLogger.addHandler(fileHandler)
 
@@ -85,19 +87,14 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     logging.info("Winnaker Version: {}".format(version))
     logging.info("Current Config: {}".format(args))
 
-    if not os.path.exists(os.environ["WINNAKER_OUTPUTPATH"]):
-        os.makedirs(os.environ["WINNAKER_OUTPUTPATH"])
+    if not os.path.exists(cfg_output_files_path):
+        os.makedirs(cfg_output_files_path)
 
-    if os.environ.get('WINNAKER_EMAIL_SMTP') is not None:
-        atexit.register(
-            send_mail,
-            os.environ["WINNAKER_EMAIL_FROM"],
-            os.environ["WINNAKER_EMAIL_TO"],
-            "Winnaker Screenshots " + str(
-                datetime.utcnow()),
-            "Here are the screenshots of the spinnaker's last run at " + str(
-                datetime.utcnow()) + " UTC Time",
-            server=os.environ["WINNAKER_EMAIL_SMTP"])
+    if (cfg_email_smtp != "") and (cfg_email_to != ""):
+        atexit.register(send_mail, cfg_email_from, cfg_email_to, "Winnaker Screenshots " +
+                        str(datetime.utcnow()), "Here are the screenshots of the spinnaker's last run at " +
+                        str(datetime.utcnow()) +
+                        " UTC Time", server=cfg_email_smtp)
 
     if args.headless:
         logging.debug("Starting virtual display")
@@ -112,7 +109,6 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
         s.login()
     s.get_pipeline(args.app, args.pipeline)
     if not args.nolastbuild:
-        logging.debug("Going into nolastbuild block")
         logging.info(
             "- Last build status: {}".format(s.get_last_build().status.encode('utf-8')))
         logging.info("- Screenshot Stages")
