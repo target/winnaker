@@ -18,15 +18,15 @@ from os.path import basename
 
 
 def getScreenshotFiles():
-    print ("Getting the screenshot files in side " +
-           os.environ["WINNAKER_OUTPUTPATH"])
+    logging.debug("Getting the screenshot files in side " +
+                  os.environ["WINNAKER_OUTPUTPATH"])
     files = [
         join(os.environ["WINNAKER_OUTPUTPATH"], f) for f in listdir(
             os.environ["WINNAKER_OUTPUTPATH"]) if isfile(
             join(
                 os.environ["WINNAKER_OUTPUTPATH"],
                 f))]
-    print (files)
+    logging.debug(files)
     return files
 
 
