@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: winnaker-configmap
+data:
+  winnaker-spinnaker-username: "REPLACE_ME"
+  winnaker-spinnaker-url: "REPLACE_ME"
+  winnaker-spinnaker-app-name: "REPLACE_ME"
+  winnaker-spinnaker-pipeline-name: "REPLACE_ME"
+  winnaker-output-path: "/winnaker-screenshots"    # for screenshots
+  winnaker-max-wait-pipeline: "100"    # max wait for a pipeline to finish in minutes when starting a full pipeline.
+  winnaker-number-of-stages-to-check: "2" # number of stages in a pipeline to check
+  winnaker-hipchat-posturl: "REPLACE_ME" # only if you use hipchat feature
+  winnaker-email-smtp: "REPLACE_ME"  # only if you want the screenshots be sent to an email
+  winnaker-email-from: "REPLACE_ME"
+  winnaker-email-to: "REPLACE_ME"

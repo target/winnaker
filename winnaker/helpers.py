@@ -5,7 +5,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import WebDriverException
-import time, logging, os
+import time
+import logging
+import os
 from datetime import datetime
 from retrying import retry
 from os import listdir
@@ -14,23 +16,30 @@ from os.path import basename
 
 # from selenium.common.exceptions import ElementNotVisibleException
 
+
 def getScreenshotFiles():
-    return [
-        os.environ["WINNAKER_OUTPUTPATH"] +
-        "/" +
-        f for f in listdir(
+    logging.debug("Getting the screenshot files in side " +
+                  os.environ["WINNAKER_OUTPUTPATH"])
+    files = [
+        join(os.environ["WINNAKER_OUTPUTPATH"], f) for f in listdir(
             os.environ["WINNAKER_OUTPUTPATH"]) if isfile(
             join(
                 os.environ["WINNAKER_OUTPUTPATH"],
                 f))]
+    logging.debug(files)
+    return files
+
 
 def get_env(env_key, default):
     value = os.getenv(env_key)
     if value is None or len(value) == 0:
-        logging.debug("{} not set in environment, defaulting to {}".format(env_key, default))
+        logging.debug(
+            "{} not set in environment, defaulting to {}".format(
+                env_key, default))
         return default
     logging.debug("{} set from environment".format(env_key))
     return value
+
 
 def post_to_hipchat(message, alert=False):
     import requests
@@ -60,10 +69,13 @@ def a_nice_refresh(driver):
     time.sleep(1)
 
 
-@retry(wait_exponential_multiplier=1000, wait_exponential_max=5000,stop_max_attempt_number=10)
+@retry(
+    wait_exponential_multiplier=1000,
+    wait_exponential_max=5000,
+    stop_max_attempt_number=10)
 def wait_for_xpath_presence(driver, xpath, be_clickable=False):
     logging.debug("Waiting for XPATH: {}".format(xpath))
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 5)
     try:
         if be_clickable:
             e = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
@@ -74,14 +86,29 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
         return e
     except TimeoutException:
         logging.error("Error: Could not find {}".format(xpath))
-        driver.save_screenshot("./outputs/debug" + now() + ".png")
+        driver.save_screenshot(
+            join(
+                os.environ["WINNAKER_OUTPUTPATH"],
+                "debug_" +
+                now() +
+                ".png"))
         a_nice_refresh(driver)
         raise TimeoutException
     except StaleElementReferenceException:
-        driver.save_screenshot("./outputs/debug" + now() + ".png")
+        driver.save_screenshot(
+            join(
+                os.environ["WINNAKER_OUTPUTPATH"],
+                "debug_" +
+                now() +
+                ".png"))
         a_nice_refresh(driver)
         raise StaleElementReferenceException
-    driver.save_screenshot("./outputs/error_driver_" + now() + ".png")
+    driver.save_screenshot(
+        join(
+            os.environ["WINNAKER_OUTPUTPATH"],
+            "error_driver_" +
+            now() +
+            ".png"))
 
 
 def move_to_element(driver, e, click=False):
@@ -93,7 +120,10 @@ def move_to_element(driver, e, click=False):
         actions.move_to_element(e).perform()
 
 
-@retry(wait_exponential_multiplier=1000, wait_exponential_max=5000,stop_max_attempt_number=10)
+@retry(
+    wait_exponential_multiplier=1000,
+    wait_exponential_max=5000,
+    stop_max_attempt_number=10)
 def get_body_text(driver):
     try:
         e = wait_for_xpath_presence(driver, "//body")
@@ -124,6 +154,7 @@ def click_stubborn(driver, e, xpath):
             break
     return e
 
+
 def print_passed():
     logging.info("""
     ******************
@@ -131,12 +162,14 @@ def print_passed():
     ******************
     """)
 
+
 def print_failed():
     logging.error("""
     !!!!!!!!!!!!!!!!!!
         FAILED
     !!!!!!!!!!!!!!!!!!
     """)
+
 
 def now():
     return str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
