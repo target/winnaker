@@ -28,7 +28,7 @@ clean-kube:
 	kubectl delete pods --all
 
 run-docker:
-	docker run --env-file wiinaker/.env -it -v $(CURDIR)/winnaker-screenshots:/winnaker-screenshots/ local/winnaker:latest
+	docker run --env-file winnaker/.env -it -v $(CURDIR)/winnaker-screenshots:/winnaker-screenshots/ local/winnaker:latest
 
 
 .PHONY: build
