@@ -12,6 +12,9 @@ import logging
 from winnaker.helpers import *
 from datetime import datetime
 from tqdm import tqdm
+from os.path import join
+from winnaker.settings import *
+
 
 ERROR_LIST = {
     "Whitelabel Error Page": "Check clouddriver",
@@ -33,57 +36,40 @@ class Spinnaker():
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
         # self.driver = webdriver.Firefox()
         time.sleep(1)
-        self.driver.get(os.environ["WINNAKER_SPINNAKER_URL"])
+        self.driver.get(cfg_spinnaker_url)
         self.wait = WebDriverWait(self.driver, 10)
-        if not os.path.exists(os.environ["WINNAKER_OUTPUTPATH"]):
-            os.makedirs(os.environ["WINNAKER_OUTPUTPATH"])
+        if not os.path.exists(cfg_output_files_path):
+            os.makedirs(cfg_output_files_path)
 
     def login(self):
         self.check_page_contains_error()
-        usernamebox = get_env(
-            "WINNAKER_XPATH_LOGIN_USERNAME",
-            "//input[@id='username'][@name='pf.username']")
-        passwordbox = get_env(
-            "WINNAKER_XPATH_LOGIN_PASSWORD",
-            "//input[@id='password'][@name='pf.pass']")
-        signinbutton = get_env(
-            "WINNAKER_XPATH_LOGIN_SUBMIT",
-            "//input[@type='submit']")
-
-        e = wait_for_xpath_presence(self.driver, usernamebox)
+        e = wait_for_xpath_presence(self.driver, cfg_usernamebox_xpath)
         logging.debug(
             "Logging in as: {}".format(
-                os.environ["WINNAKER_USERNAME"]))
-        e.send_keys(os.environ['WINNAKER_USERNAME'])
-        e = wait_for_xpath_presence(self.driver, passwordbox)
-        self.driver.save_screenshot(
-            os.environ["WINNAKER_OUTPUTPATH"] + "/login.png")
-        e.send_keys(os.environ['WINNAKER_PASSWORD'])
-        e = wait_for_xpath_presence(self.driver, signinbutton)
+                cfg_spinnaker_username))
+        e.send_keys(cfg_spinnaker_username)
+        e = wait_for_xpath_presence(self.driver, cfg_passwordbox_xpath)
+        self.driver.save_screenshot(join(
+            cfg_output_files_path, "login.png"))
+        e.send_keys(cfg_spinnaker_password)
+        e = wait_for_xpath_presence(self.driver, cfg_signin_button_xpath)
         e.click()
         logging.info("- Logged in to the spinnaker")
-        self.driver.save_screenshot(
-            os.environ["WINNAKER_OUTPUTPATH"] + "/login2.png")
+        self.driver.save_screenshot(join(cfg_output_files_path, "login2.png"))
         time.sleep(3)
 
     def get_application(self, appname):
         self.check_page_contains_error()
-        applications_xpath = get_env(
-            "WINNAKER_XPATH_APPLICATIONS_TAB",
-            "//a[@href='#/applications' and contains(.,'Applications')]")
         e = wait_for_xpath_presence(
-            self.driver, applications_xpath, be_clickable=True)
+            self.driver, cfg_applications_xpath, be_clickable=True)
         e.click()
-        searchbox = get_env(
-            "WINNAKER_XPATH_SEARCH_APPLICATIONS",
-            "//input[@placeholder='Search applications']")
-        e = wait_for_xpath_presence(self.driver, searchbox)
+        e = wait_for_xpath_presence(self.driver, cfg_searchbox_xpath)
         e.send_keys(appname)
         e.send_keys(Keys.RETURN)
         time.sleep(1)
-        self.driver.save_screenshot(
-            os.environ["WINNAKER_OUTPUTPATH"] +
-            "/applications.png")
+        self.driver.save_screenshot(join(
+            cfg_output_files_path,
+            "applications.png"))
         app_xpath = "//a[contains (.,'" + appname + "')]"
         e = wait_for_xpath_presence(self.driver, app_xpath)
         e.click()
@@ -112,55 +98,43 @@ class Spinnaker():
             e.click()
         time.sleep(2)
         self.driver.save_screenshot(
-            os.environ["WINNAKER_OUTPUTPATH"] +
-            "/pipelines.png")
+            join(cfg_output_files_path, "pipelines.png"))
         logging.info(
             "- Selected pipeline: {} successfully".format(pipelinename))
 
     def start_manual_execution(self, force_bake=False):
         self.check_page_contains_error()
         # starts the 1st pipeline which is currently on the page
-        start_xpath = get_env(
-            "WINNAKER_XPATH_START_MANUAL_EXECUTION",
-            "//div[contains(@class, 'execution-group-actions')]/h4[2]/a/span")
-        e = wait_for_xpath_presence(self.driver, start_xpath)
-        click_stubborn(self.driver, e, start_xpath)
-        time.sleep(3)
+        e = wait_for_xpath_presence(
+            self.driver, cfg_start_manual_execution_xpath)
+        click_stubborn(self.driver, e, cfg_start_manual_execution_xpath)
+        time.sleep(2)
         if force_bake:
-            fbake_xpath = get_env(
-                "WINNAKER_XPATH_FORCE_REBAKE",
-                "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']")
             e = wait_for_xpath_presence(
-                self.driver, start_xpath, be_clickable=True)
+                self.driver, cfg_force_bake_xpath, be_clickable=True)
             move_to_element(self.driver, e, click=True)
             time.sleep(2)
             if not e.get_attribute('checked'):
-                xpath = get_env(
-                    "WINNAKER_XPATH_FORCE_REBAKE",
-                    "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']")
                 e = wait_for_xpath_presence(
-                    self.driver, xpath, be_clickable=True)
-                print("Checking force bake option")
+                    self.driver, cfg_froce_rebake_xpath, be_clickable=True)
+                logging.info("Checking force bake option")
                 e.click()
             self.driver.save_screenshot(
-                os.environ["WINNAKER_OUTPUTPATH"] +
-                "/force_bake_check.png")
+                join(cfg_output_files_path, "force_bake_check.png"))
 
         run_xpath = "//button[@type='submit' and contains(.,'Run')]/span[1]"
         e = wait_for_xpath_presence(self.driver, run_xpath, be_clickable=True)
         e.click()
         time.sleep(2)
-        MAX_WAIT_FOR_RUN = int(
-            os.environ["WINNAKER_MAX_WAIT_PIPELINE"]) * 60.00
         start_time = time.time()
         logging.info("- Starting Manual Execution")
         time.sleep(10)  # To give enough time for pipeleine kick off show up
         logging.info("\t Running ... (will wait up to {} minutes".format(
-            int(MAX_WAIT_FOR_RUN / 60)))
-        for i in tqdm(range(int(MAX_WAIT_FOR_RUN / 10))):
-            if time.time() - start_time > MAX_WAIT_FOR_RUN:
+            int(cfg_max_wait_for_pipeline_run_mins / 60)))
+        for i in tqdm(range(int(cfg_max_wait_for_pipeline_run_mins / 10))):
+            if time.time() - start_time > cfg_max_wait_for_pipeline_run_mins:
                 logging.error("The run is taking more than {} minutes".format(
-                    int(MAX_WAIT_FOR_RUN / 60)))
+                    int(cfg_max_wait_for_pipeline_run_mins / 60)))
                 logging.error("Considering it as an error")
                 sys.exit(1)
             status = self.get_last_build().status
@@ -172,7 +146,7 @@ class Spinnaker():
             elif "SUCCEEDED" in status:
                 logging.info("\nCongratulations pipleline run was successful.")
                 print_passed()
-                self.get_stages(n=2)
+                self.get_stages(n=cfg_number_of_stages_to_check)
                 return 0
             elif "TERMINAL" in status:
                 logging.error(
@@ -184,32 +158,21 @@ class Spinnaker():
                 sys.exit(2)
 
     def get_last_build(self):
-        execution_summary_xp = get_env(
-            "WINNAKER_XPATH_PIPELINE_EXECUTION_SUMMARY",
-            "//execution-groups[1]//div[@class='execution-summary']")
         execution_summary = wait_for_xpath_presence(
-            self.driver, execution_summary_xp)
-
-        trigger_details_xp = get_env(
-            "WINNAKER_XPATH_PIPLELINE_TRIGGER_DETAILS",
-            "//execution-groups[1]//ul[@class='trigger-details']")
+            self.driver, cfg_execution_summary_xp)
         trigger_details = wait_for_xpath_presence(
-            self.driver, trigger_details_xp)
+            self.driver, cfg_trigger_details_xp)
         self.build = Build(trigger_details.text, execution_summary.text)
         time.sleep(1)
-        detail_xpath = get_env(
-            "WINNAKER_XPATH_PIPLELINE_DETAILS_LINK",
-            "//execution-groups[1]//execution-status//div/a[contains(., 'Details')]")
-        e = wait_for_xpath_presence(self.driver, detail_xpath)
-        self.driver.save_screenshot(
-            os.environ["WINNAKER_OUTPUTPATH"] +
-            "/last_build_status.png")
+        e = wait_for_xpath_presence(self.driver, cfg_detail_xpath)
+        self.driver.save_screenshot(join(
+            cfg_output_files_path,
+            "last_build_status.png"))
         return self.build
 
     # TODO Get all the stages automaticly
     def get_stages(
-        self, n=int(
-            os.environ["WINNAKER_NUMBER_OF_STAGES_TO_CHECK"])):
+            self, n=cfg_number_of_stages_to_check):
         # n number of stages to get
         for i in range(1, n + 1):
             stage_xpath = "//execution[1]//div[@class='stages']/div[" + str(
@@ -234,7 +197,11 @@ class Spinnaker():
                 except TimeoutException:
                     continue
             self.driver.save_screenshot(
-                os.environ["WINNAKER_OUTPUTPATH"] + "/stage_" + str(i) + ".png")
+                join(
+                    cfg_output_files_path,
+                    "stage_" +
+                    str(i) +
+                    ".png"))
 
     def check_page_contains_error(self):
         for error in ERROR_LIST.keys():

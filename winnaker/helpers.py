@@ -13,32 +13,23 @@ from retrying import retry
 from os import listdir
 from os.path import isfile, join
 from os.path import basename
+from winnaker.settings import *
+
 
 # from selenium.common.exceptions import ElementNotVisibleException
 
 
 def getScreenshotFiles():
     logging.debug("Getting the screenshot files in side " +
-                  os.environ["WINNAKER_OUTPUTPATH"])
+                  cfg_output_files_path)
     files = [
-        join(os.environ["WINNAKER_OUTPUTPATH"], f) for f in listdir(
-            os.environ["WINNAKER_OUTPUTPATH"]) if isfile(
+        join(cfg_output_files_path, f) for f in listdir(
+            cfg_output_files_path) if isfile(
             join(
-                os.environ["WINNAKER_OUTPUTPATH"],
+                cfg_output_files_path,
                 f))]
     logging.debug(files)
     return files
-
-
-def get_env(env_key, default):
-    value = os.getenv(env_key)
-    if value is None or len(value) == 0:
-        logging.debug(
-            "{} not set in environment, defaulting to {}".format(
-                env_key, default))
-        return default
-    logging.debug("{} set from environment".format(env_key))
-    return value
 
 
 def post_to_hipchat(message, alert=False):
@@ -58,9 +49,11 @@ def post_to_hipchat(message, alert=False):
         "message_format": "text"
     }
 
-    post_url = os.environ['WINNAKER_HIPCHAT_POSTURL']
     headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
-    r = requests.post(post_url, data=json.dumps(data), headers=headers)
+    r = requests.post(
+        cfg_hipchat_posturl,
+        data=json.dumps(data),
+        headers=headers)
 
 
 def a_nice_refresh(driver):
@@ -88,7 +81,7 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
         logging.error("Error: Could not find {}".format(xpath))
         driver.save_screenshot(
             join(
-                os.environ["WINNAKER_OUTPUTPATH"],
+                cfg_output_files_path,
                 "debug_" +
                 now() +
                 ".png"))
@@ -97,7 +90,7 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
     except StaleElementReferenceException:
         driver.save_screenshot(
             join(
-                os.environ["WINNAKER_OUTPUTPATH"],
+                cfg_output_files_path,
                 "debug_" +
                 now() +
                 ".png"))
@@ -105,7 +98,7 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
         raise StaleElementReferenceException
     driver.save_screenshot(
         join(
-            os.environ["WINNAKER_OUTPUTPATH"],
+            cfg_output_files_path,
             "error_driver_" +
             now() +
             ".png"))

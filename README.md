@@ -64,11 +64,11 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 - Searches for `samplepipeline` the pipleline
 - Gets the last build status
 - Generates screenshot :
-	- `./src/outputs/applications.png`
-	- `./src/outputs/pipelines.png`
-	- `./src/outputs/last_build_status.png`
-	- `./src/outputs/login.png`
-	- `./src/outputs/stage1.png`
+	- `./applications.png`
+	- `./pipelines.png`
+	- `./last_build_status.png`
+	- `./login.png`
+	- `./stage1.png`
 - Any error will result in a non-zero code to the system.
 - Error screenshots will be timestaped.
 
