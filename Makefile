@@ -12,7 +12,7 @@ build-docker:
 	docker build -t local/winnaker:latest .
 
 format-code:
-	autopep8 --in-place --aggressive --aggressive winnaker/*
+	autopep8 --in-place --aggressive --aggressive winnaker/*.py
 
 clean-output:
 	rm winnaker-screenshots/*.png || true
