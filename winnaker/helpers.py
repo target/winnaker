@@ -21,9 +21,7 @@ def getScreenshotFiles():
     print ("Getting the screenshot files in side " +
            os.environ["WINNAKER_OUTPUTPATH"])
     files = [
-        os.environ["WINNAKER_OUTPUTPATH"] +
-        "/" +
-        f for f in listdir(
+        join(os.environ["WINNAKER_OUTPUTPATH"], f) for f in listdir(
             os.environ["WINNAKER_OUTPUTPATH"]) if isfile(
             join(
                 os.environ["WINNAKER_OUTPUTPATH"],
@@ -122,7 +120,11 @@ def move_to_element(driver, e, click=False):
         actions.move_to_element(e).perform()
 
 
-@retry(wait_exponential_multiplier=1000, wait_exponential_max=5000, stop_max_attempt_number=10)def get_body_text(driver):
+@retry(
+    wait_exponential_multiplier=1000,
+    wait_exponential_max=5000,
+    stop_max_attempt_number=10)
+def get_body_text(driver):
     try:
         e = wait_for_xpath_presence(driver, "//body")
     except StaleElementReferenceException:

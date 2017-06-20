@@ -121,6 +121,7 @@ use with --caution--, will override the sample app.
 ## How tos
 
 
+
 #### How to setup winnaker hipchat bot ?
 - create a hipchat bot
 - grab the post url
@@ -131,3 +132,28 @@ it should look like
 #### How to import the Winnaker python package?
 - `pip install git+git://github.com/target/winnaker`
 - Then in your python script you can import the Winnaker modules. For example you can import the `models` module via `from winnaker import models`
+
+#### How to deploy to minikube?
+- Start minikube
+
+	```
+	minikube start
+	```
+
+- Activate minikube docker in your bash
+
+	```
+	eval $(minikube docker-env)
+	```
+- build docker
+
+	```
+	make build-docker-nocache
+	```
+- Fill out secret and configmaps and change default 5 minute cronjob to your needs. (edit configmap and secret inside kube folder)
+
+- apply kube files
+
+	```
+	kubectl apply -f kube
+	```

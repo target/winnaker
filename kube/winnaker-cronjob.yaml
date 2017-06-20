@@ -3,8 +3,8 @@ kind: CronJob
 metadata:
   name: winnaker-cronjob
 spec:
-  # every 10rd minute. for local testing
-  schedule: "*/10 * * * *"
+  # every 5rd minute. for local testing
+  schedule: "*/5 * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -19,11 +19,11 @@ spec:
               #   - s
               resources:
                 limits:
-                  cpu: 1000m
-                  memory: 1500Mi
-                requests:
                   cpu: 500m
                   memory: 500Mi
+                requests:
+                  cpu: 200m
+                  memory: 100Mi
               env:
                 - name: WINNAKER_USERNAME
                   valueFrom:

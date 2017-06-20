@@ -12,7 +12,7 @@ def send_mail(send_from, send_to, subject, text,
               server="localhost"):
     logging.info("Sending email")
     files = getScreenshotFiles()
-    logging.info("Attaching files ", files)
+    logging.info("Attaching files ", str(files))
     msg = MIMEMultipart()
     msg['From'] = send_from
     msg['To'] = send_to
