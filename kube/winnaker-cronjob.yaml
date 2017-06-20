@@ -1,0 +1,87 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: winnaker-cronjob
+spec:
+  # every 10rd minute. for local testing
+  schedule: "*/10 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: winnaker-cronjob
+              image: local/winnaker:latest
+              imagePullPolicy: Never
+              # args:
+              #   - s
+              resources:
+                limits:
+                  cpu: 1000m
+                  memory: 1500Mi
+                requests:
+                  cpu: 500m
+                  memory: 500Mi
+              env:
+                - name: WINNAKER_USERNAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-spinnaker-username
+                - name: WINNAKER_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: winnaker-secrets
+                      key: winnaker-spinnaker-password
+                - name: WINNAKER_SPINNAKER_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-spinnaker-url
+                - name: WINNAKER_APP_NAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-spinnaker-app-name
+                - name: WINNAKER_PIPELINE_NAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-spinnaker-pipeline-name
+                - name: WINNAKER_OUTPUTPATH
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-output-path
+                - name: WINNAKER_MAX_WAIT_PIPELINE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-max-wait-pipeline
+                - name: WINNAKER_NUMBER_OF_STAGES_TO_CHECK
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-number-of-stages-to-check
+                - name: WINNAKER_HIPCHAT_POSTURL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-hipchat-posturl
+                - name: WINNAKER_EMAIL_SMTP
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-email-smtp
+                - name: WINNAKER_EMAIL_FROM
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-email-from
+                - name: WINNAKER_EMAIL_TO
+                  valueFrom:
+                    configMapKeyRef:
+                      name: winnaker-configmap
+                      key: winnaker-email-to

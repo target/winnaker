@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(name='winnaker',
       description='An audit tool that tests the whole system functionality of Spinnaker',
       author='Target Corporation',
-      version='0.7.0',
+      version='0.7.9',
       license='MIT',
       packages=find_packages(),
       install_requires=[

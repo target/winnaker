@@ -62,6 +62,9 @@ class Spinnaker():
         e = wait_for_xpath_presence(self.driver, signinbutton)
         e.click()
         logging.info("- Logged in to the spinnaker")
+        self.driver.save_screenshot(
+            os.environ["WINNAKER_OUTPUTPATH"] + "/login2.png")
+        time.sleep(3)
 
     def get_application(self, appname):
         self.check_page_contains_error()

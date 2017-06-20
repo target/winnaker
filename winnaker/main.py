@@ -85,6 +85,9 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     logging.info("Winnaker Version: {}".format(version))
     logging.info("Current Config: {}".format(args))
 
+    if not os.path.exists(os.environ["WINNAKER_OUTPUTPATH"]):
+        os.makedirs(os.environ["WINNAKER_OUTPUTPATH"])
+
     if os.environ.get('WINNAKER_EMAIL_SMTP') is not None:
         atexit.register(
             send_mail,
@@ -94,7 +97,6 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
                 datetime.utcnow()),
             "Here are the screenshots of the spinnaker's last run at " + str(
                 datetime.utcnow()) + " UTC Time",
-            files=getScreenshotFiles(),
             server=os.environ["WINNAKER_EMAIL_SMTP"])
 
     if args.headless:

@@ -7,3 +7,5 @@ winnaker.egg-info/
 .idea
 winnaker.iml
 winnaker.log
+kube/*secrets.yaml
+kube/winnaker-configmap.yaml

@@ -18,13 +18,18 @@ from os.path import basename
 
 
 def getScreenshotFiles():
-    return [
-        join(os.environ["WINNAKER_OUTPUTPATH"], f) +
-        for f in listdir(
+    print ("Getting the screenshot files in side " +
+           os.environ["WINNAKER_OUTPUTPATH"])
+    files = [
+        os.environ["WINNAKER_OUTPUTPATH"] +
+        "/" +
+        f for f in listdir(
             os.environ["WINNAKER_OUTPUTPATH"]) if isfile(
             join(
                 os.environ["WINNAKER_OUTPUTPATH"],
                 f))]
+    print (files)
+    return files
 
 
 def get_env(env_key, default):
@@ -72,7 +77,7 @@ def a_nice_refresh(driver):
     stop_max_attempt_number=10)
 def wait_for_xpath_presence(driver, xpath, be_clickable=False):
     logging.debug("Waiting for XPATH: {}".format(xpath))
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 5)
     try:
         if be_clickable:
             e = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
@@ -83,14 +88,29 @@ def wait_for_xpath_presence(driver, xpath, be_clickable=False):
         return e
     except TimeoutException:
         logging.error("Error: Could not find {}".format(xpath))
-        driver.save_screenshot("./outputs/debug" + now() + ".png")
+        driver.save_screenshot(
+            join(
+                os.environ["WINNAKER_OUTPUTPATH"],
+                "debug_" +
+                now() +
+                ".png"))
         a_nice_refresh(driver)
         raise TimeoutException
     except StaleElementReferenceException:
-        driver.save_screenshot("./outputs/debug" + now() + ".png")
+        driver.save_screenshot(
+            join(
+                os.environ["WINNAKER_OUTPUTPATH"],
+                "debug_" +
+                now() +
+                ".png"))
         a_nice_refresh(driver)
         raise StaleElementReferenceException
-    driver.save_screenshot("./outputs/error_driver_" + now() + ".png")
+    driver.save_screenshot(
+        join(
+            os.environ["WINNAKER_OUTPUTPATH"],
+            "error_driver_" +
+            now() +
+            ".png"))
 
 
 def move_to_element(driver, e, click=False):
@@ -102,11 +122,7 @@ def move_to_element(driver, e, click=False):
         actions.move_to_element(e).perform()
 
 
-@retry(
-    wait_exponential_multiplier=1000,
-    wait_exponential_max=5000,
-    stop_max_attempt_number=10)
-def get_body_text(driver):
+@retry(wait_exponential_multiplier=1000, wait_exponential_max=5000, stop_max_attempt_number=10)def get_body_text(driver):
     try:
         e = wait_for_xpath_presence(driver, "//body")
     except StaleElementReferenceException:
