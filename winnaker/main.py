@@ -63,9 +63,9 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
         help="print more logs, DEBUG level",
         action="store_true")
     parser.add_argument(
-        "-sgs",
-        "--skipgetstages",
-        help="do not do the last get stages step",
+        "-slb",
+        "--skiplastbuild",
+        help="skip last build",
         action="store_true"
     )
     args = parser.parse_args()

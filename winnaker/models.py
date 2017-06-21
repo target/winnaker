@@ -146,7 +146,7 @@ class Spinnaker():
             elif "SUCCEEDED" in status:
                 logging.info("\nCongratulations pipleline run was successful.")
                 print_passed()
-                if not args.skipgetstages:
+                if not args.skiplastbuild:
                     self.get_stages(n=cfg_number_of_stages_to_check)
                 return 0
             elif "TERMINAL" in status:

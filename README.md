@@ -93,8 +93,8 @@ optional arguments:
   -nlb, --nolastbuild   will not attempt to check last build status or stages
   -hl, --headless       will run in an xfvb display
   -v, --verbose         print more logs, DEBUG level
-  -sgs, --skipgetstages
-                        do not do the last get stages stepy
+  -slb, --skiplastbuild
+                        skip last build
 ```
 
 
