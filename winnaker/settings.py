@@ -2,17 +2,16 @@ import os
 from dotenv import load_dotenv
 from os.path import join, dirname
 from dotenv import load_dotenv
-import logging
 
 
 def get_env(env_key, default):
     value = os.getenv(env_key)
     if value is None or len(value) == 0:
-        logging.debug(
-            "{} not set in environment, defaulting to {}".format(
+        print(
+            "INFO: {} not set in environment, defaulting to {}".format(
                 env_key, default))
         return default
-    logging.debug("{} set from environment".format(env_key))
+    print("INFO: {} set from environment".format(env_key))
     return value
 
 
@@ -26,14 +25,14 @@ cfg_output_files_path = os.environ["WINNAKER_OUTPUTPATH"]
 cfg_spinnaker_url = os.environ["WINNAKER_SPINNAKER_URL"]
 cfg_spinnaker_username = os.environ["WINNAKER_USERNAME"]
 cfg_spinnaker_password = os.environ['WINNAKER_PASSWORD']
-cfg_max_wait_for_pipeline_run_mins = int(
-    os.environ["WINNAKER_MAX_WAIT_PIPELINE"]) * 60.00
+cfg_max_wait_for_pipeline_run_mins = int(int(
+    get_env("WINNAKER_MAX_WAIT_PIPELINE", 100)) * 60.00)
 
 # Notification Settings
-cfg_email_smtp = os.environ["WINNAKER_EMAIL_SMTP"]
-cfg_email_from = os.environ["WINNAKER_EMAIL_FROM"]
-cfg_email_to = os.environ["WINNAKER_EMAIL_TO"]
-cfg_hipchat_posturl = os.environ['WINNAKER_HIPCHAT_POSTURL']
+cfg_email_smtp = get_env("WINNAKER_EMAIL_SMTP", None)
+cfg_email_from = get_env("WINNAKER_EMAIL_FROM", None)
+cfg_email_to = get_env("WINNAKER_EMAIL_TO", None)
+cfg_hipchat_posturl = get_env('WINNAKER_HIPCHAT_POSTURL', None)
 
 # ---------------------------------------------
 # Internal Configs
