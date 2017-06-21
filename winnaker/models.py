@@ -54,7 +54,7 @@ class Spinnaker():
         e.send_keys(cfg_spinnaker_password)
         e = wait_for_xpath_presence(self.driver, cfg_signin_button_xpath)
         e.click()
-        logging.info("- Logged in to the spinnaker")
+        logging.info("- Logged in to the spinnaker instance at {}".format(cfg_spinnaker_url))
         self.driver.save_screenshot(join(cfg_output_files_path, "login2.png"))
         time.sleep(3)
 

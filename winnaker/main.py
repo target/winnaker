@@ -90,7 +90,7 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     if not os.path.exists(cfg_output_files_path):
         os.makedirs(cfg_output_files_path)
 
-    if (cfg_email_smtp != "") and (cfg_email_to != ""):
+    if cfg_email_smtp and cfg_email_to and cfg_email_from:
         atexit.register(send_mail, cfg_email_from, cfg_email_to, "Winnaker Screenshots " +
                         str(datetime.utcnow()), "Here are the screenshots of the spinnaker's last run at " +
                         str(datetime.utcnow()) +
