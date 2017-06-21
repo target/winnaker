@@ -61,7 +61,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 ## What does default run do ?
 - Logs in to `spinnaker` through chromium browser
 - Searches for `sampleapp` app
-- Searches for `samplepipeline` the pipleline
+- Searches for `samplepipeline` the pipeline
 - Gets the last build status
 - Generates screenshot :
 	- `./applications.png`
@@ -79,7 +79,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 
 
 ## Options
-Config file is located at ./src/config.sh but you can simply add any of the options bellow to your run.sh commnand.
+You can add any of the options below to your run.sh commnand.
 
 ```
 optional arguments:
@@ -90,7 +90,11 @@ optional arguments:
   -p PIPELINE, --pipeline PIPELINE
                         the name of pipline to test
   -nl, --nologin        will not attempt to login
+  -nlb, --nolastbuild   will not attempt to check last build status or stages
   -hl, --headless       will run in an xfvb display
+  -v, --verbose         print more logs, DEBUG level
+  -sgs, --skipgetstages
+                        do not do the last get stages stepy
 ```
 
 
@@ -107,7 +111,7 @@ optional arguments:
 
 `./run.sh -s -fb`
 
-##### Example 2: Start build execution on diffrent pipleine than config file
+##### Example 2: Start build execution on different pipeline than config file
 
 `./run.sh -s -p "deploy to npe"`
 
@@ -115,7 +119,7 @@ optional arguments:
 
 use with --caution--, will override the sample app.
 
-`./run.sh -a "differentapp" -p "diffrent pipleine"`
+`./run.sh -a "differentapp" -p "different pipeline"`
 
 
 ## How tos
