@@ -144,7 +144,7 @@ class Spinnaker():
                 logging.info("Pipeline has not yet started.")
                 time.sleep(10)
             elif "SUCCEEDED" in status:
-                logging.info("\nCongratulations pipleline run was successful.")
+                logging.info("Congratulations pipeline run was successful.")
                 print_passed()
                 self.get_stages(n=cfg_number_of_stages_to_check)
                 return 0
@@ -175,7 +175,7 @@ class Spinnaker():
             self, n=cfg_number_of_stages_to_check):
         # n number of stages to get
         for i in range(1, n + 1):
-            stage_xpath = "//execution[1]//div[@class='stages']/div[" + str(
+            stage_xpath = "//execution-groups[1]//div[@class='stages']/div[" + str(
                 i) + "]"
             e = wait_for_xpath_presence(
                 self.driver, stage_xpath, be_clickable=True)
@@ -227,7 +227,7 @@ class Build():
                 "\n")[1].replace("Duration: ", "")
             self.type_of_start = ""
             self.username = trigger_details.split("\n")[0]
-            logging.info("Username: {}".format(self.username))
+            logging.debug("Username: {}".format(self.username))
             if " CDT" in trigger_details:
                 self.datetime_started = datetime.strptime(
                     trigger_details.split("\n")[1].replace(
