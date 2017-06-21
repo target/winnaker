@@ -227,7 +227,7 @@ class Build():
                 "\n")[1].replace("Duration: ", "")
             self.type_of_start = ""
             self.username = trigger_details.split("\n")[0]
-            logging.info("Username: {}".format(self.username))
+            logging.debug("Username: {}".format(self.username))
             if " CDT" in trigger_details:
                 self.datetime_started = datetime.strptime(
                     trigger_details.split("\n")[1].replace(
