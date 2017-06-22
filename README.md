@@ -1,4 +1,7 @@
-# Winnaker
+## Winnaker
+[![](https://images.microbadger.com/badges/image/medyagh/winnaker.svg)](https://microbadger.com/images/medyagh/winnaker "Get your own image badge on microbadger.com")
+
+
 ```
 ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .______
 \   \  /  \  /   / |  | |  \ |  | |  \ |  |     /   \     |  |/  / |   ____||   _  \

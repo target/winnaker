@@ -9,6 +9,7 @@ import logging
 from os.path import join
 from winnaker.settings import *
 
+
 def send_mail(send_from, send_to, subject, text,
               server="localhost"):
     logging.info("Sending email")
