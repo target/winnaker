@@ -8,6 +8,7 @@ from selenium.common.exceptions import WebDriverException
 import time
 import logging
 import os
+import glob
 from datetime import datetime
 from retrying import retry
 from os import listdir
@@ -22,12 +23,7 @@ from winnaker.settings import *
 def getScreenshotFiles():
     logging.debug("Getting the screenshot files in side " +
                   cfg_output_files_path)
-    files = [
-        join(cfg_output_files_path, f) for f in listdir(
-            cfg_output_files_path) if isfile(
-            join(
-                cfg_output_files_path,
-                f))]
+    files = glob.glob("{}/*.png".format(cfg_output_files_path))
     logging.debug(files)
     return files
 
