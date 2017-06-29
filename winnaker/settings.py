@@ -66,9 +66,6 @@ cfg_searchbox_xpath = get_env(
 cfg_start_manual_execution_xpath = get_env(
     "WINNAKER_XPATH_START_MANUAL_EXECUTION",
     "//div[contains(@class, 'execution-group-actions')]/h4[2]/a/span")
-cfg_froce_rebake_xpath = get_env(
-    "WINNAKER_XPATH_FORCE_REBAKE",
-    "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']")
-cfg_force_rebake_check_xpath = get_env(
+cfg_force_rebake_xpath = get_env(
     "WINNAKER_XPATH_FORCE_REBAKE",
     "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']")
