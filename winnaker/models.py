@@ -112,7 +112,7 @@ class Spinnaker():
         time.sleep(2)
         if force_bake:
             e = wait_for_xpath_presence(
-                self.driver, cfg_force_bake_xpath, be_clickable=True)
+                self.driver, cfg_force_rebake_xpath, be_clickable=True)
             move_to_element(self.driver, e, click=True)
             time.sleep(2)
             if not e.get_attribute('checked'):
