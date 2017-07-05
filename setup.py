@@ -6,7 +6,7 @@ from os.path import join, dirname
 setup(name='winnaker',
       description='An audit tool that tests the whole system functionality of Spinnaker',
       author='Target Corporation',
-      version='1.0.2',
+      version='1.0.3',
       license='MIT',
       packages=find_packages(),
       install_requires=[
