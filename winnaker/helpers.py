@@ -57,48 +57,53 @@ def a_nice_refresh(driver):
     logging.info("Refreshing the browser ...")
     time.sleep(1)
 
-
-@retry(
-    wait_exponential_multiplier=1000,
-    wait_exponential_max=5000,
-    stop_max_attempt_number=10)
-def wait_for_xpath_presence(driver, xpath, be_clickable=False):
-    logging.debug("Waiting for XPATH: {}".format(xpath))
-    wait = WebDriverWait(driver, 5)
-    try:
-        if be_clickable:
-            e = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-        else:
-            e = wait.until(
-                EC.presence_of_element_located((By.XPATH, xpath)))
-        move_to_element(driver, e)
-        return e
-    except TimeoutException:
-        logging.error("Error: Could not find {}".format(xpath))
+def wait_for_xpath_presence(driver,
+        xpath,
+        be_clickable=False,
+        exponential_multiplier=cfg_wait_exponential_multiplier,
+        exponential_max=cfg_wait_exponential_max,
+        stop_max_attempt=cfg_retry_stop_max_attempt):
+    @retry(
+        wait_exponential_multiplier=exponential_multiplier,
+        wait_exponential_max=exponential_max,
+        stop_max_attempt_number=stop_max_attempt)
+    def _wait_for_xpath_presence(driver, xpath, be_clickable):
+        logging.debug("Waiting for XPATH: {}".format(xpath))
+        wait = WebDriverWait(driver, 5)
+        try:
+            if be_clickable:
+                e = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            else:
+                e = wait.until(
+                    EC.presence_of_element_located((By.XPATH, xpath)))
+            move_to_element(driver, e)
+            return e
+        except TimeoutException:
+            logging.error("Error: Could not find {}".format(xpath))
+            driver.save_screenshot(
+                join(
+                    cfg_output_files_path,
+                    "debug_" +
+                    now() +
+                    ".png"))
+            a_nice_refresh(driver)
+            raise TimeoutException
+        except StaleElementReferenceException:
+            driver.save_screenshot(
+                join(
+                    cfg_output_files_path,
+                    "debug_" +
+                    now() +
+                    ".png"))
+            a_nice_refresh(driver)
+            raise StaleElementReferenceException
         driver.save_screenshot(
             join(
                 cfg_output_files_path,
-                "debug_" +
+                "error_driver_" +
                 now() +
                 ".png"))
-        a_nice_refresh(driver)
-        raise TimeoutException
-    except StaleElementReferenceException:
-        driver.save_screenshot(
-            join(
-                cfg_output_files_path,
-                "debug_" +
-                now() +
-                ".png"))
-        a_nice_refresh(driver)
-        raise StaleElementReferenceException
-    driver.save_screenshot(
-        join(
-            cfg_output_files_path,
-            "error_driver_" +
-            now() +
-            ".png"))
-
+    return _wait_for_xpath_presence(driver, xpath, be_clickable)
 
 def move_to_element(driver, e, click=False):
     from selenium.webdriver.common.action_chains import ActionChains
@@ -109,18 +114,23 @@ def move_to_element(driver, e, click=False):
         actions.move_to_element(e).perform()
 
 
-@retry(
-    wait_exponential_multiplier=1000,
-    wait_exponential_max=5000,
-    stop_max_attempt_number=10)
-def get_body_text(driver):
-    try:
-        e = wait_for_xpath_presence(driver, "//body")
-    except StaleElementReferenceException:
-        a_nice_refresh(driver)
-        e = wait_for_xpath_presence(driver, "//*")
-        raise StaleElementReferenceException
-    return e.get_attribute("outerHTML")
+def get_body_text(driver,
+        exponential_multiplier=cfg_wait_exponential_multiplier,
+        exponential_max=cfg_wait_exponential_max,
+        stop_max_attempt=cfg_retry_stop_max_attempt):
+    @retry(
+        wait_exponential_multiplier=exponential_multiplier,
+        wait_exponential_max=exponential_max,
+        stop_max_attempt_number=stop_max_attempt)
+    def _get_body_text(driver):
+        try:
+            e = wait_for_xpath_presence(driver, "//body")
+        except StaleElementReferenceException:
+            a_nice_refresh(driver)
+            e = wait_for_xpath_presence(driver, "//*")
+            raise StaleElementReferenceException
+        return e.get_attribute("outerHTML")
+    return _get_body_text(driver)
 
 
 # Subbornly clicks on the elements which run away from the DOM

@@ -39,7 +39,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 
 
 	```
-	cp .env-sample .env
+	cp winnaker/.env-sample .env
 
 	```
 

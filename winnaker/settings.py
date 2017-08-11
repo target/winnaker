@@ -34,6 +34,17 @@ cfg_email_from = get_env("WINNAKER_EMAIL_FROM", None)
 cfg_email_to = get_env("WINNAKER_EMAIL_TO", None)
 cfg_hipchat_posturl = get_env('WINNAKER_HIPCHAT_POSTURL', None)
 
+# Retry settings
+cfg_wait_exponential_multiplier = get_env(
+    "WINNAKER_WAIT_EXPONENTIAL_MULTIPLIER",
+    10)
+cfg_wait_exponential_max= get_env(
+    "WINNAKER_WAIT_EXPONENTIAL_MAX",
+    5000)
+cfg_retry_stop_max_attempt = get_env(
+    "WINNAKER_RETRY_STOP_MAX_ATTEMPT",
+    10)
+
 # ---------------------------------------------
 # Internal Configs
 #
@@ -69,3 +80,7 @@ cfg_start_manual_execution_xpath = get_env(
 cfg_force_rebake_xpath = get_env(
     "WINNAKER_XPATH_FORCE_REBAKE",
     "//input[@type='checkbox' and @ng-model='vm.command.trigger.rebake']")
+
+cfg_oauth_authorize_xpath= get_env(
+    "WINNAKER_XPATH_OAUTH_AUTHORIZE",
+    "//*[@id='js-oauth-authorize-btn']")

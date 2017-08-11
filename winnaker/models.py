@@ -41,6 +41,17 @@ class Spinnaker():
         if not os.path.exists(cfg_output_files_path):
             os.makedirs(cfg_output_files_path)
 
+    def authorize(self):
+        logging.debug("Authorizing OAuth Request")
+        try:
+            e = wait_for_xpath_presence(self.driver, cfg_oauth_authorize_xpath, stop_max_attempt=2)
+            self.driver.save_screenshot(join(
+                cfg_output_files_path, "authorize.png"))
+            e.click()
+        except:
+            logging.debug("couldn't find authorize xpath. This is OK if the user has already been authorized, looked for: %s"
+                % cfg_oauth_authorize_xpath)
+
     def login(self):
         self.check_page_contains_error()
         e = wait_for_xpath_presence(self.driver, cfg_usernamebox_xpath)
