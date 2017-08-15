@@ -45,8 +45,16 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
         type=str,
         help="the name of pipline to test",
         default=os.environ["WINNAKER_PIPELINE_NAME"])
-    parser.add_argument("-nl", "--nologin",
-                        help="will not attempt to login", action="store_true")
+    parser.add_argument(
+        "-nl", "--nologin",
+        help="will not attempt to login",
+        action="store_true")
+    parser.add_argument(
+        "-oa", "--authorize",
+        help="authorize the oauth application with the logged in user if required. " +
+            "This argument and '--nologin' are mutually exclusive",
+        action="store_true"
+    )
     parser.add_argument(
         "-nlb",
         "--nolastbuild",
@@ -107,6 +115,8 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     if not args.nologin:
         logging.debug("Starting login")
         s.login()
+        if args.authorize: s.authorize()
+
     s.get_pipeline(args.app, args.pipeline)
     if not args.nolastbuild:
         logging.info(
