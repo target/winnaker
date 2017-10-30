@@ -13,8 +13,8 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
 
 ```
 
-## What is Winnaker ?
-Auditing tool for Spinnaker. Real Testing in real browser !
+## What is Winnaker?
+Winnaker is an auditing tool for Spinnaker. Real testing in a real browser!
 
 ## What do you need on your work station?
 1. python 2.7
@@ -25,7 +25,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 2. a sample app
 3. a sample pipeline
 
-## Run Headless in in docker.
+## Run headlessly in Docker
 1. Build Docker:
 
 
@@ -51,7 +51,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 4. Add [options](#options) as needed.
 
 
-## Run GUI mode .
+## Run GUI mode
 
 1. run
 ```
@@ -61,10 +61,10 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 
 
 
-## What does default run do ?
+## What does the default run do?
 - Logs in to `spinnaker` through chromium browser
 - Searches for `sampleapp` app
-- Searches for `samplepipeline` the pipleline
+- Searches for `samplepipeline` the pipeline
 - Gets the last build status
 - Generates screenshot :
 	- `./applications.png`
@@ -73,7 +73,7 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 	- `./login.png`
 	- `./stage1.png`
 - Any error will result in a non-zero code to the system.
-- Error screenshots will be timestaped.
+- Error screenshots will be timestamped.
 
 
 ## Screenshots
@@ -82,61 +82,61 @@ Auditing tool for Spinnaker. Real Testing in real browser !
 
 
 ## Options
-Config file is located at ./src/config.sh but you can simply add any of the options bellow to your run.sh commnand.
+The config file is located at ./src/config.sh but you can simply add any of the options below to your run.sh command.
 
 ```
 optional arguments:
   -h, --help            show this help message and exit
-  -s, --start           starts manual execution of the pipline
+  -s, --start           starts manual execution of the pipeline
   -fb, --forcebake      force bake, to be used wth --start
   -a APP, --app APP     the name of application to look for
   -p PIPELINE, --pipeline PIPELINE
-                        the name of pipline to test
+                        the name of pipeline to test
   -nl, --nologin        will not attempt to login
-  -hl, --headless       will run in an xfvb display
+  -hl, --headless       will run in an xvfb display
 ```
 
 
-## Examples :
+## Examples:
 ##### Example 1: Gets the last build status of the default pipeline
 `./run.sh`
 
 
-##### Example 2: Starts default pipleine execution
+##### Example 2: Starts default pipeline execution
 
 `./run.sh -s`
 
-##### Example 2: Start the pipleine with force rebake
+##### Example 3: Start the pipeline with force rebake
 
 `./run.sh -s -fb`
 
-##### Example 2: Start build execution on diffrent pipleine than config file
+##### Example 4: Start build execution on different pipeline than config file
 
 `./run.sh -s -p "deploy to npe"`
 
-##### Example 3 : override default app specified in the config file
+##### Example 5: override default app specified in the config file
 
 use with --caution--, will override the sample app.
 
-`./run.sh -a "differentapp" -p "diffrent pipleine"`
+`./run.sh -a "differentapp" -p "different pipeline"`
 
 
 ## How tos
 
 
 
-#### How to setup winnaker hipchat bot ?
+#### How to setup a Winnaker Hipchat bot
 - create a hipchat bot
 - grab the post url
 it should look like
 `https://INSERT_HIPCHAT_BASE_URL.com/v2/room/INSERT_ROOM_ID/notification?auth_token=INSERT_TOKEN`
 
 
-#### How to import the Winnaker python package?
+#### How to import the Winnaker python package
 - `pip install git+git://github.com/target/winnaker`
 - Then in your python script you can import the Winnaker modules. For example you can import the `models` module via `from winnaker import models`
 
-#### How to deploy to minikube?
+#### How to deploy to minikube
 - Start minikube
 
 	```
