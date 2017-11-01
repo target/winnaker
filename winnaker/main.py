@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 import argparse
-import logging
-import os
-import sys
+import atexit
+
+import pkg_resources  # part of setuptools
+
 from winnaker.models import *
 from winnaker.notify import *
-from selenium import webdriver
-import pkg_resources  # part of setuptools
-import atexit
-from datetime import datetime
 from winnaker.settings import *
 
 
 def main():
-    print ("""
+    print("""
 ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .______
 \   \  /  \  /   / |  | |  \ |  | |  \ |  |     /   \     |  |/  / |   ____||   _  \\
  \   \/    \/   /  |  | |   \|  | |   \|  |    /  ^  \    |  '  /  |  |__   |  |_)  |
@@ -26,7 +23,7 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     parser.add_argument(
         "-s",
         "--start",
-        help="starts manual execution of the pipline",
+        help="starts manual execution of the pipeline",
         action="store_true")
     parser.add_argument(
         "-fb",
@@ -52,7 +49,7 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     parser.add_argument(
         "-oa", "--authorize",
         help="authorize the oauth application with the logged in user if required. " +
-            "This argument and '--nologin' are mutually exclusive",
+             "This argument and '--nologin' are mutually exclusive",
         action="store_true"
     )
     parser.add_argument(
@@ -115,7 +112,8 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
     if not args.nologin:
         logging.debug("Starting login")
         s.login()
-        if args.authorize: s.authorize()
+        if args.authorize:
+            s.authorize()
 
     s.get_pipeline(args.app, args.pipeline)
     if not args.nolastbuild:

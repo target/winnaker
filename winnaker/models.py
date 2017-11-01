@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-import os
 import sys
-import logging
-from winnaker.helpers import *
-from datetime import datetime
-from tqdm import tqdm
-from os.path import join
-from winnaker.settings import *
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from tqdm import tqdm
+
+from winnaker.helpers import *
+from winnaker.settings import *
 
 ERROR_LIST = {
     "Whitelabel Error Page": "Check clouddriver",
@@ -128,7 +121,7 @@ class Spinnaker():
             time.sleep(2)
             if not e.get_attribute('checked'):
                 e = wait_for_xpath_presence(
-                    self.driver, cfg_froce_rebake_xpath, be_clickable=True)
+                    self.driver, cfg_force_rebake_xpath, be_clickable=True)
                 logging.info("Checking force bake option")
                 e.click()
             self.driver.save_screenshot(
@@ -140,7 +133,7 @@ class Spinnaker():
         time.sleep(2)
         start_time = time.time()
         logging.info("- Starting Manual Execution")
-        time.sleep(10)  # To give enough time for pipeleine kick off show up
+        time.sleep(10)  # To give enough time for pipeline kick off show up
         logging.info("\t Running ... (will wait up to {} minutes".format(
             int(cfg_max_wait_for_pipeline_run_mins / 60)))
         for i in tqdm(range(int(cfg_max_wait_for_pipeline_run_mins / 10))):
@@ -176,19 +169,17 @@ class Spinnaker():
             self.driver, cfg_trigger_details_xp)
         self.build = Build(trigger_details.text, execution_summary.text)
         time.sleep(1)
-        e = wait_for_xpath_presence(self.driver, cfg_detail_xpath)
+        wait_for_xpath_presence(self.driver, cfg_detail_xpath)
         self.driver.save_screenshot(join(
             cfg_output_files_path,
             "last_build_status.png"))
         return self.build
 
-    # TODO Get all the stages automaticly
-    def get_stages(
-            self, n=cfg_number_of_stages_to_check):
+    # TODO Get all the stages automatically
+    def get_stages(self, n=cfg_number_of_stages_to_check):
         # n number of stages to get
         for i in range(1, n + 1):
-            stage_xpath = "//execution-groups[1]//div[@class='stages']/div[" + str(
-                i) + "]"
+            stage_xpath = "//div[@class='stages']/span[%s]/div" % str(i)
             e = wait_for_xpath_presence(
                 self.driver, stage_xpath, be_clickable=True)
             move_to_element(self.driver, e)
@@ -222,9 +213,6 @@ class Spinnaker():
                 logging.info("- Suggestion: {}".format(ERROR_LIST[error]))
                 print_failed()
                 sys.exit(1)
-                # TODO: Is this needed? It should never occur because of the
-                # sys.exit(1)
-                return True
             assert error not in get_body_text(self.driver)
 
 
