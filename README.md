@@ -13,6 +13,10 @@ ____    __    ____  __  .__   __. .__   __.      ___       __  ___  _______ .___
 
 ```
 
+## Archive notice
+
+In August of 2021, this project was archived. 
+
 ## What is Winnaker?
 Winnaker is an auditing tool for Spinnaker. Real testing in a real browser!
 
